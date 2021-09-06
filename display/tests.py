@@ -110,3 +110,94 @@ class CategoryTest(TestCase):
     update = Category.objects.get(name='travel')
     self.assertEqual(update.name, 'travel')
 
+class ImageTest(TestCase):
+  def setUp(self):
+    self.category= Category(name='interior')
+    self.category.save_category()
+    self.location= Location(name='nairobi')
+    self.location.save_location()
+    self.image= Image(id='1', name='kitchen',description='description',photo='image.png',category=self.category,location=self.location)
+
+  def tearDown(self):
+    """
+    Clears Database after each test
+    """
+    Image.objects.all().delete()
+    Category.objects.all().delete()
+    Location.objects.all().delete()
+  
+  def test_image_instance(self):
+    """
+    test that determines whether a new image created is an instance of the Image class
+    """
+    self.assertTrue(isinstance(self.image, Image))
+
+  def test_save_image(self):
+    """
+    Test whether new image is added to the db
+    """
+    self.image.save_image()
+    images = Image.objects.all()
+    self.assertTrue(len(images)>0)
+  
+  def tearDown(self):
+    """
+    Clears Database after each test
+    """
+    Image.objects.all().delete()
+    Category.objects.all().delete()
+    Location.objects.all().delete()
+
+
+  def test_delete_image(self):
+    """
+    Test whether image is deleted
+    """
+
+    self.image.save_image()
+    images=Image.objects.all()
+    self.assertEqual(len(images),1)
+    self.image.delete_image()
+    del_images=Image.objects.all()
+    self.assertEqual(len(del_images),0)
+
+
+  def test_search_category(self):
+    '''
+    Tests whether image is retrieved by category
+    '''
+    self.location = Location(name='nairobi')
+    self.location.save_location()
+    self.category = Category(name='interior')
+    self.category.save_category()
+    self.image=Image(id=1,photo="image.png",name='kitchen',description='description',location=self.location,category=self.category)
+    self.image.save_image()
+    images=Image.search_image(self.category.id)
+    self.assertTrue(len(images)> 0)
+  
+  def test_search_location(self):
+    """ 
+    Test where image is retrieved by location
+    """
+    # self.location = Location(name='nairobi')
+    self.location.save_location()
+    self.category = Category(name='interior')
+    self.category.save_category()
+    self.image=Image(id=1,photo="image.png",name='kitchen',description='description',location=self.location,category=self.category)
+    self.image.save_image()
+    images = Image.filter_by_location("nairobi")
+    self.assertTrue(len(images) > 0)
+  
+  def test_get_image_by_id(self):
+    '''
+    Test whether image is retrieved by id 
+    '''
+    self.location = Location(name='nairobi')
+    self.location.save_location()
+    self.category = Category(name='interior')
+    self.category.save_category()
+    self.image=Image(id=1,photo="image.png",name='kitchen',description='description',location=self.location,category=self.category)
+    self.image.save_image()
+    images = Image.get_image_by_id(self.image.id)
+    self.assertEqual(images.name, self.image.name)
+
