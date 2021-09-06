@@ -36,3 +36,15 @@ def search_results(request):
     else:
         return render(request, 'all-images/search.html', {"location": location})
 
+def image_category(request, category):
+    images = Images.objects.filter(image_category__category__contains = category).order_by('-created')
+    location = Location.objects.all()
+
+    context = {
+        'category':category,
+        'images': images,
+        'location': location
+    }
+
+    return render(request, "all-images/tech.html", context)
+
