@@ -22,3 +22,4 @@ def image_details(request, pk):
         'location': location
     }
     return render(request, "all-images/image_details.html", context)
+
