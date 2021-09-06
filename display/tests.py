@@ -58,3 +58,55 @@ class LocationTest(TestCase):
     self.nairobi.save_location()
     self.nakuru.save_location()
     self.assertEqual(len(Location.display_all_locations()), 2)
+
+class CategoryTest(TestCase):
+  def setUp(self):
+    """
+    Creates new instance before a test
+    """
+    self.fashion = Category(name='fashion')
+    self.games = Category(name='games')
+
+  def tearDown(self):
+    """
+    Clears database after each test
+    """
+    Category.objects.all().delete()
+
+  def test_category_instance(self):
+    """
+    Test whether the new categories an an instance of the category class
+    """
+    self.assertTrue(isinstance(self.fashion, Category))
+    self.assertTrue(isinstance(self.games, Category))
+
+  def test_save_category(self):
+    """
+    Test that determines whehter new categories are saved to the db
+    """
+    self.fashion.save_category()
+    self.games.save_category()
+    categories = Category.objects.all()
+    self.assertTrue(len(categories) == 2)
+
+  def test_delete_category(self):
+    """
+    Test whether category is deleted
+    """
+    self.fashion.save_category()
+    self.games.save_category()
+    categories1 = Category.objects.all()
+    self.assertEqual(len(categories1),2)
+    self.fashion.delete_category()
+    categories2 = Category.objects.all()
+    self.assertEqual(len(categories2),1)
+  
+  def test_update_category(self):
+    """
+    Test that determines whether the category has been updated
+    """
+    self.fashion.save_category()
+    self.fashion.update_category(self.fashion.id, 'travel')
+    update = Category.objects.get(name='travel')
+    self.assertEqual(update.name, 'travel')
+
