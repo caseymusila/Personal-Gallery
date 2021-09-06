@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load cloudinary %} 
+
+{% block content %}
+<div class="container grid place-items-start mx-auto">
+    <div>
+        {% if searched_images %}
+        <h2 class="text-2xl sm:text-3xl md:text-5xl font-bold text-secondary-200 mb-5 px-8">Found {{ searched_images | length }} of
+            searched term {{ message }}</h2>
+        {% else %}
+        <h2 class="text-2xl sm:text-3xl md:text-5xl font-bold text-secondary-200 mb-5 px-8">Found 0 of searched term
+            {{ message }}</h2>
+        {% endif %}
+
+        {% if searched_images %}
+        <section class="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 sm:gap-2 gap-5 min-h-screen min-w-screen">
+            <!-- Card -->
+            {% for image in searched_images %}
+            <div class="flex flex-col max-w-md bg-secondary-300 px-8 py-6 rounded-xl space-y-5 items-center hover:shadow-lg">
+                <a href="{% url 'details' image.pk %}"><img class="w-full h-full sm:h-full object-cover rounded-md" src="{{image.image.url}}" alt="motivation" /></a>
+                <span class="text-left">{{ image.image_name }}</span>
+                <!--  -->
+            </div>
+            {% endfor %}
+        </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -23,3 +23,16 @@ def image_details(request, pk):
     }
     return render(request, "all-images/image_details.html", context)
 
+def search_results(request):
+    location = Location.objects.all()
+
+    if 'search_item' in request.GET and request.GET["search_item"]:
+        search_term = request.GET.get("search_item")
+        searched_images = Images.search_by_category(search_term)
+        message = f"{search_term}"
+
+        return render(request, "all-images/search.html", {"message": message, "searched_images": searched_images, "location": location})
+
+    else:
+        return render(request, 'all-images/search.html', {"location": location})
+
