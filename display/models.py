@@ -34,3 +34,7 @@ class Images(models.Model):
     image_location = models.ForeignKey(Location, related_name = 'posts', on_delete = models.CASCADE)
     created = models.DateTimeField(auto_now_add = True)
     last_modified = models.DateTimeField(auto_now = True)
+
+
+    def save_image(self):
+        self.save()
